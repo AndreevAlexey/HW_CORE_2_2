@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -26,17 +27,21 @@ public class Main {
         System.out.println(kidsCnt);
         //список призывников
         System.out.println("\n**** список призывников ****");
-        persons.stream()
+        List<String> soldiers = persons.stream()
                 .filter(x -> x.getAge() >= 18 && x.getAge() < 27)
-                .forEach(x -> System.out.println(x.getFamily()));
+                .map(Person::getFamily)
+                .collect(Collectors.toList());
+        //soldiers.forEach(System.out::println);
         // список работоспособных
         System.out.println("\n**** список работоспособных ****");
-        Comparator<Person> comparator = (a, b) -> a.getFamily().compareTo(b.getFamily());
+        Comparator<Person> comparator = Comparator.comparing(Person::getFamily);
+        List<Person> highLvlWorkers =
         persons.stream()
                 .filter(x -> x.getAge() >= 18)
                 .filter(x -> x.getEducation() == Education.HIGHER)
                 .filter(x -> x.getSex() == Sex.MAN && x.getAge() < 65 || x.getSex() == Sex.WOMAN && x.getAge() < 60)
                 .sorted(comparator)
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
+        //highLvlWorkers.forEach(System.out::println);
     }
 }
